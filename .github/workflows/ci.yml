@@ -42,6 +42,9 @@ jobs:
           cache-to: type=gha,mode=max
 
       # 5. Smoke test the backend (start it, hit /api/health, stop it)
+      - name: Create .env for CI
+        run: cp .env.example .env
+
       - name: Smoke Test Backend Health Endpoint
         run: |
           docker compose up -d db backend

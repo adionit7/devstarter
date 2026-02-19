@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: #0b1120;
+    color: #cbd5e1;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #0b1120; }
+  ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 99px; }
+}
+
+@layer utilities {
+  /* Dot-grid background */
+  .dot-grid {
+    background-image: radial-gradient(rgba(100, 116, 139, 0.18) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Glowing top border on cards */
+  .card-border {
+    position: relative;
+    border: 1px solid rgba(51, 65, 85, 0.6);
+    border-radius: 0.875rem;
+  }
+  .card-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.875rem;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, transparent 60%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Blurred secret that reveals on hover */
+  .secret-reveal {
+    filter: blur(6px);
+    transition: filter 0.25s ease;
+    cursor: pointer;
+    user-select: none;
+  }
+  .secret-reveal:hover { filter: blur(0); }
+
+  /* Pulsing online dot */
+  .pulse-dot {
+    animation: pulseDot 2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(1.4); }
+  }
+
+  /* Fade + slide up */
+  .fade-up {
+    animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .fade-up-1 { animation-delay: 0.05s; }
+  .fade-up-2 { animation-delay: 0.12s; }
+  .fade-up-3 { animation-delay: 0.20s; }
+  .fade-up-4 { animation-delay: 0.28s; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Terminal cursor blink */
+  .cursor-blink::after {
+    content: '|';
+    animation: blink 1s step-start infinite;
+    color: #10b981;
+    margin-left: 1px;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+}

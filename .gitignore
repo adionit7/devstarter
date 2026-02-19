@@ -1,0 +1,23 @@
+# Environment — NEVER commit secrets
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+.cache/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

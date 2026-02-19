@@ -1,0 +1,56 @@
+name: CI — DevStarter
+
+# Trigger: runs on every push or pull request to main
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build Docker Images & Verify
+    runs-on: ubuntu-latest   # GitHub's free Linux runner
+
+    steps:
+      # 1. Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Docker Buildx (faster multi-platform builds with caching)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. Build the backend image
+      - name: Build Backend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: false          # don't push to registry — just verify it builds
+          tags: devstarter/backend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # 4. Build the frontend image
+      - name: Build Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: false
+          tags: devstarter/frontend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # 5. Smoke test the backend (start it, hit /api/health, stop it)
+      - name: Smoke Test Backend Health Endpoint
+        run: |
+          docker compose up -d db backend
+          echo "Waiting for backend to start..."
+          sleep 15
+          curl --fail http://localhost:8000/api/health || (docker compose logs backend && exit 1)
+          echo "✅ Backend health check passed"
+          docker compose down
+
+      # 6. Confirm success
+      - name: Build Complete
+        run: echo "✅ All images built and backend verified — Build Successful"

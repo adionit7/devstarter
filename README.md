@@ -169,4 +169,4 @@ npm run dev
 
 ## License
 
-MIT — use for portfolio, interviews, or your own SaaS.
+MIT
